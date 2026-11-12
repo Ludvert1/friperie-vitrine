@@ -1,5 +1,5 @@
 -- =====================================================================
---  VITRINE — Marketplace database (Supabase)
+--  FRIPERIE VITRINE — Marketplace database (Supabase)
 --  Supabase > SQL Editor > New query > paste everything > Run.  Safe to re-run.
 -- =====================================================================
 create extension if not exists pgcrypto;
@@ -286,6 +286,8 @@ grant execute on function public.add_review(uuid,text,int,text) to anon, authent
 grant execute on function public.approve_payment(uuid) to authenticated;
 grant execute on function public.is_admin() to anon, authenticated;
 grant select on public.public_shops to anon, authenticated;
+grant select, insert, update, delete on public.shops, public.products, public.leads, public.reviews, public.payments, public.settings to authenticated;
+grant select on public.shops, public.products, public.reviews, public.settings to anon;
 
 -- ---------- Photo storage (each merchant uploads into a folder named after their user id) ----------
 insert into storage.buckets (id, name, public) values ('market','market',true)
