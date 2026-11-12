@@ -7,7 +7,7 @@ create extension if not exists pgcrypto;
 -- ---------- Platform admins ----------
 create table if not exists public.admins (email text primary key);
 -- >>> Put YOUR admin email(s) here <<<
-insert into public.admins(email) values ('contact@fripperies.site'), ('ludvert@gmail.com') on conflict do nothing;
+insert into public.admins(email) values ('contact@friperies.online'), ('ludvert@gmail.com') on conflict do nothing;
 
 create or replace function public.is_admin() returns boolean
 language sql stable security definer set search_path = public as $$
@@ -24,7 +24,7 @@ create table if not exists public.settings (
   momo_number text default '+229 01 94 21 65 68',
   momo_name text default 'Friperie Vitrine',
   support_whatsapp text default '2290194216568',
-  support_email text default 'contact@fripperies.site',
+  support_email text default 'contact@friperies.online',
   price_basic int default 5000,
   price_premium int default 15000,
   trial_days int default 14,

@@ -9,7 +9,7 @@ With no configuration it runs in **demo mode** (data stays in the browser):
 2. **Authentication → Providers → Email**: keep sign-ups **on** (merchants register themselves). If "Confirm email" is on, merchants confirm by email and then sign in. The site finishes creating their shop after that.
 3. **Create the admin account**: Authentication → Users → Add user with the same email you put in `admins`.
 4. **Project Settings → API**: copy the URL and the `anon` key into `CONFIG` at the top of the script. You can also change `PLATFORM_NAME` there.
-5. **Deploy to Vercel** (drag and drop the folder). Add a custom domain such as `vitrine.bj` or `fripperies.site`.
+5. **Deploy to Vercel** (drag and drop the folder). Add a custom domain such as `vitrine.bj` or `friperies.online`.
 6. In **Admin → Settings**, set the platform's MoMo number, support WhatsApp, prices, trial length and limits.
 
 ## How it makes money
