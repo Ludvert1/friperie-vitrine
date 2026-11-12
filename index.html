@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Friperie Vitrine — Le marché des boutiques du Bénin</title>
-<link rel="canonical" href="https://friperies.online/">
+<link rel="canonical" href="https://www.friperies.online/">
 <meta property="og:title" content="Friperie Vitrine — Le marché des boutiques du Bénin">
-<meta property="og:url" content="https://friperies.online/">
+<meta property="og:url" content="https://www.friperies.online/">
 <meta name="description" content="Friperie Vitrine : découvrez les boutiques du Bénin, leurs produits et commandez directement sur WhatsApp. Commerçants : publiez votre boutique en ligne.">
 <meta name="theme-color" content="#0B3B33">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230B3B33'/%3E%3Cpath d='M12 26h40l-4-10H16z' fill='%23F5A524'/%3E%3Cpath d='M16 30h32v20H16z' fill='none' stroke='%23fff' stroke-width='4'/%3E%3C/svg%3E">
@@ -458,7 +458,9 @@ function pageHome(v){
   const fresh = [...vis].sort((a,b)=>new Date(b.created_at)-new Date(a.created_at)).slice(0,8);
   const counts = {}; vis.forEach(s => counts[s.category] = (counts[s.category]||0)+1);
   v.innerHTML = `
-  <section class="spot" id="spot">${slides.map((s,i)=>`<div class="sl ${i?"":"on"}"><img class="bgimg" src="${esc(shopCover(s))}" data-fb="${esc(coverArt(s.category,s.name))}" alt="">
+  <section class="spot" id="spot">${slides.length ? "" : `<div class="sl on"><img class="bgimg" src="https://images.unsplash.com/photo-1621061403547-47987c57c683?auto=format&fit=crop&q=70&w=1600" data-fb="${esc(coverArt("mode_f","Friperie"))}" alt="">
+     <div class="ct"><div class="wrap"><span class="tag">${L("Lancement","Launch")}</span><h2>${esc(CONFIG.PLATFORM_NAME)}</h2><p>${L("Le nouveau marché en ligne des boutiques du Bénin. Commerçants : soyez parmi les premiers à publier votre vitrine et profitez de "+S.trial_days+" jours d'essai gratuit.","Benin's new online marketplace for shops. Merchants: be among the first to list your storefront and enjoy a "+S.trial_days+"-day free trial.")}</p>
+     <div style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn acc" href="#join">${L("Publier ma boutique","List my shop")}</a><a class="btn ghost" href="#how">${L("Comment ça marche","How it works")}</a></div></div></div></div>`}${slides.map((s,i)=>`<div class="sl ${i?"":"on"}"><img class="bgimg" src="${esc(shopCover(s))}" data-fb="${esc(coverArt(s.category,s.name))}" alt="">
      <div class="ct"><div class="wrap"><span class="tag">${prem.length?L("★ À la une · Sponsorisé","★ Featured · Sponsored"):L("À découvrir","Discover")}</span><br><br>
        <img class="logo" src="${esc(shopLogo(s))}" alt=""><h2>${esc(s.name)}</h2><p>${esc(promo(s)||dsc(s))}</p>
        <div style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn acc" href="#s-${esc(s.slug)}">${L("Visiter la boutique","Visit the shop")}</a><span class="tag lt">${cat(s.category).em} ${esc(catName(s.category))} · ${esc(s.city)}</span></div></div></div></div>`).join("")}
@@ -469,7 +471,7 @@ function pageHome(v){
     <div class="cats">${CATS.map(c=>`<a class="catc" href="#shops" data-gocat="${c.id}"><span class="em">${c.em}</span><b>${c[lang]}</b><span>${counts[c.id]||0} ${L("boutique(s)","shop(s)")}</span></a>`).join("")}</div></div></section>
   ${prem.length?`<section class="s" style="padding-top:0"><div class="wrap"><div class="sh"><div><div class="eyebrow">★ Premium</div><h2>${L("Boutiques recommandées","Recommended shops")}</h2></div><a href="#shops">${L("Tout voir →","See all →")}</a></div><div class="row">${prem.map(shopCard).join("")}</div></div></section>`:""}
   ${featured.length?`<section class="s" style="padding-top:0"><div class="wrap"><div class="sh"><div><div class="eyebrow">${L("Sélection","Selection")}</div><h2>${L("Produits à la une","Featured products")}</h2></div></div><div class="pgrid">${featured.map(p=>prodCard(p,true)).join("")}</div></div></section>`:""}
-  <section class="s" style="padding-top:0"><div class="wrap"><div class="sh"><div><div class="eyebrow">${L("Fraîchement arrivées","Just arrived")}</div><h2>${L("Nouvelles boutiques","New shops")}</h2></div><a href="#shops">${L("Tout voir →","See all →")}</a></div><div class="row">${fresh.map(shopCard).join("")}</div></div></section>
+  <section class="s" style="padding-top:0"><div class="wrap"><div class="sh"><div><div class="eyebrow">${L("Fraîchement arrivées","Just arrived")}</div><h2>${L("Nouvelles boutiques","New shops")}</h2></div><a href="#shops">${L("Tout voir →","See all →")}</a></div>${fresh.length?`<div class="row">${fresh.map(shopCard).join("")}</div>`:`<div class="empty">${L("Les premières boutiques arrivent bientôt. Vous êtes commerçant ? ","The first shops are coming soon. Are you a merchant? ")}<a href="#join"><b>${L("Publiez la vôtre","List yours")}</b></a></div>`}</div></section>
   <section class="s" id="how" style="padding-top:0"><div class="wrap"><div class="sh"><div><div class="eyebrow">${L("Simple","Simple")}</div><h2>${L("Comment ça marche","How it works")}</h2></div></div>
     <div class="steps"><div class="step"><div class="n">1</div><h3>${L("Découvrez","Discover")}</h3><p class="note">${L("Parcourez les boutiques par catégorie ou par ville, consultez photos, prix et avis.","Browse shops by category or city, see photos, prices and reviews.")}</p></div>
     <div class="step"><div class="n">2</div><h3>${L("Contactez","Contact")}</h3><p class="note">${L("Commandez directement sur WhatsApp, appelez ou visitez le site de la boutique.","Order directly on WhatsApp, call, or visit the shop's own website.")}</p></div>
