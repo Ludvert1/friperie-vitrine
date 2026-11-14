@@ -5,13 +5,15 @@
 create extension if not exists pgcrypto;
 
 -- ---------- Platform admins ----------
-create table if not exists public.admins (email text primary key);
+create table if not exists public.admins (email text primary key, user_id uuid);
+alter table public.admins add column if not exists user_id uuid;
 -- >>> Put YOUR admin email(s) here <<<
 insert into public.admins(email) values ('contact@friperies.online'), ('ludvert@gmail.com') on conflict do nothing;
 
 create or replace function public.is_admin() returns boolean
 language sql stable security definer set search_path = public as $$
-  select exists (select 1 from public.admins where lower(email) = lower(coalesce(auth.jwt() ->> 'email','')));
+  -- admin rights are bound to an account id (see 'Activate an admin' below), never to an email typed at sign-up
+  select auth.uid() is not null and exists (select 1 from public.admins where user_id = auth.uid());
 $$;
 -- internal flag used by trusted functions to update protected columns
 create or replace function public.sys_ok() returns boolean language sql stable as $$
@@ -298,3 +300,9 @@ create policy "vt upload" on storage.objects for insert to authenticated
   with check (bucket_id = 'market' and ((storage.foldername(name))[1] = auth.uid()::text or public.is_admin()));
 create policy "vt delete" on storage.objects for delete to authenticated
   using (bucket_id = 'market' and ((storage.foldername(name))[1] = auth.uid()::text or public.is_admin()));
+
+-- ---------- Activate an admin ----------
+-- 1) Create the person's account: Supabase > Authentication > Users > Add user (choose a password, tick Auto Confirm).
+-- 2) Then run (replace the email):
+--   update public.admins a set user_id = u.id from auth.users u
+--   where lower(u.email) = lower(a.email) and lower(a.email) = 'name@example.com';
