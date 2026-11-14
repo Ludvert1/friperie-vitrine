@@ -15,7 +15,7 @@ With no configuration it runs in **demo mode** (data stays in the browser):
 ## How it makes money
 | | Basic | Premium |
 |---|---|---|
-| Default price | 5,000 FCFA/month | 15,000 FCFA/month |
+| Default price | 2,000 FCFA/month | 5,000 FCFA/month |
 | Shop page, WhatsApp/call/website buttons, reviews, stats | ✓ | ✓ |
 | Products / gallery photos | 15 / 6 | 200 / 30 |
 | "Featured" banner when the app opens | – | ✓ |
