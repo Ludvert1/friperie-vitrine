@@ -152,6 +152,15 @@ table.t td{padding:10px 12px;border-bottom:1px solid #F0EDE5;vertical-align:midd
 .tsc{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:#fff}
 .mini{width:40px;height:40px;border-radius:10px;object-fit:cover}
 .st{display:inline-block;padding:3px 9px;border-radius:999px;font-size:11.5px;font-weight:700}
+.st.new{background:#FEF3C7;color:#92400E}.st.accepted,.st.preparing{background:#DBEAFE;color:#1E40AF}.st.ready{background:#E0E7FF;color:#3730A3}.st.picked_up,.st.delivered{background:#DCFCE7;color:#166534}.st.cancelled{background:#FEE2E2;color:#991B1B}
+.nbadge{display:inline-block;min-width:18px;padding:1px 6px;border-radius:999px;background:#DC2626;color:#fff;font-size:11px;font-weight:800;text-align:center;margin-left:4px}
+.modes{display:grid;gap:8px;margin:6px 0 12px}.modes label{display:flex;gap:10px;align-items:flex-start;border:1.5px solid var(--line);border-radius:14px;padding:11px 12px;cursor:pointer;background:#fff}
+.modes label:has(input:checked){border-color:var(--pri);background:#F0FAF7}.modes input{margin-top:3px;accent-color:var(--pri)}.modes b{display:block;font-size:14px}.modes small{color:#667085}
+.steps{display:flex;gap:4px;margin:12px 0}.steps div{flex:1;height:6px;border-radius:9px;background:#E4E7EC}.steps div.on{background:var(--pri)}
+.oc{display:flex;gap:12px;align-items:flex-start}.oc img{width:64px;height:64px;border-radius:12px;object-fit:cover;flex:none}
+.hist{font-size:12px;color:#667085;margin-top:8px;border-top:1px dashed var(--line);padding-top:6px}
+.ni{display:flex;gap:10px;padding:12px;border-bottom:1px solid var(--line);align-items:flex-start}.ni.unread{background:#FFFBEB}.ni .ic{font-size:20px;flex:none}
+.bell{position:relative}
 .st.active,.st.approved{background:#DCFCE7;color:#166534}.st.pending{background:#FEF3C7;color:#92400E}.st.suspended,.st.rejected,.st.expired{background:#FEE2E2;color:#991B1B}
 .imgs{display:flex;gap:8px;flex-wrap:wrap}.imgs .im{position:relative}.imgs img{width:92px;height:70px;object-fit:cover;border-radius:10px;border:1px solid var(--line)}
 .imgs .im button{position:absolute;top:-6px;right:-6px;width:22px;height:22px;border-radius:50%;border:0;background:var(--bad);color:#fff;font-size:12px;padding:0}
@@ -268,6 +277,7 @@ function seed(){
     pfr:"Nouvelle collection de costumes — retouches offertes ce mois-ci !", pen:"New suit collection — free alterations this month!" },
     [["Costume 2 pièces bleu nuit",85000,"🤵","Midnight blue 2-piece suit"],["Chemise slim en lin",15000,"👔","Slim linen shirt"],["Ensemble bomba brodé",45000,"🧥","Embroidered bomba set"],["Mocassins en cuir",35000,"👞","Leather loafers"],["Cravate en soie",7000,"👔","Silk tie"]]);
   vg.shop.cover = "https://images.unsplash.com/photo-1621061415651-2b7fa415360b?auto=format&fit=crop&q=70&w=1600"; // falls back to generated art offline
+  vg.shop.fav_count = 37; vg.shop.delivery_note = "Cotonou : 1 000 F · Calavi : 1 500 F"; vg.shop.address = "Akpakpa, Cotonou";
   const list = [vg,
     mk({ name:"MiLen Senteurs & Bracelets", category:"beaute", cover:"https://images.unsplash.com/photo-1543593822-d283d968aa4a?auto=format&fit=crop&q=70&w=1600", city:"Abomey-Calavi", wa:"22997000001", plan:"premium", verified:true, spot:2, v:530, age:12,
       dfr:"Parfums et senteurs, bracelets faits main personnalisables. Idées cadeaux pour toutes les occasions.", den:"Fragrances and handmade, customizable bracelets. Gift ideas for every occasion.",
@@ -311,7 +321,15 @@ function seed(){
     { id:uid(), shop_id:list[9].shop.id, plan:"basic", months:1, amount:5000, momo_txn:"8812345599", momo_sender:"0197000009", status:"pending", created_at:iso(-0.2) }
   ];
   const leads = [ { id:uid(), shop_id:list[0].shop.id, name:"Jean-Baptiste", phone:"0196112233", message:L("Avez-vous le costume bleu en taille XL ?","Do you have the blue suit in XL?"), product:"Costume 2 pièces bleu nuit", created_at:iso(-1) } ];
-  return { shops:list.map(x=>x.shop), products:list.flatMap(x=>x.products), reviews, payments, leads,
+  const p0 = list[0].products[0], p1 = list[0].products[1];
+  const orders = [
+    { id:uid(), code:"FV-7Q2K9A", shop_id:list[0].shop.id, product_id:p0.id, product_name:p0.name, image:p0.image, unit_price:p0.price, qty:1, total:p0.price, customer_name:"Romaric T.", customer_phone:"0196554433", delivery_mode:"shop", address:"Fidjrossè, près de l'église St-Jean", preferred_date:null, note:"Taille 52", courier_name:"", courier_phone:"", picked_up_by:"", picked_up_at:null, status:"new", history:[{at:iso(-0.05),status:"new"}], created_at:iso(-0.05), updated_at:iso(-0.05) },
+    { id:uid(), code:"FV-3HD81C", shop_id:list[0].shop.id, product_id:p1.id, product_name:p1.name, image:p1.image, unit_price:p1.price, qty:2, total:p1.price*2, customer_name:"Arnaud K.", customer_phone:"0197887766", delivery_mode:"own", address:"", preferred_date:null, note:"", courier_name:"Gozem — Paul", courier_phone:"0196001122", picked_up_by:"", picked_up_at:null, status:"ready", history:[{at:iso(-1),status:"new"},{at:iso(-0.9),status:"accepted"},{at:iso(-0.5),status:"ready"}], created_at:iso(-1), updated_at:iso(-0.5) } ];
+  const notifs = [
+    { id:uid(), shop_id:list[0].shop.id, kind:"order", title:"Nouvelle commande FV-7Q2K9A · 1 × "+p0.name, body:"Romaric T. — "+money(p0.price)+" — Livraison par la boutique", ref:"FV-7Q2K9A", read:false, created_at:iso(-0.05) },
+    { id:uid(), shop_id:list[0].shop.id, kind:"favorite", title:"Un client a ajouté votre boutique à ses favoris ❤️", body:"", ref:null, read:false, created_at:iso(-0.2) },
+    { id:uid(), shop_id:list[0].shop.id, kind:"lead", title:"Nouvelle demande · Jean-Baptiste", body:"Costume 2 pièces bleu nuit — Avez-vous le costume bleu en taille XL ?", ref:null, read:true, created_at:iso(-1) } ];
+  return { shops:list.map(x=>x.shop), products:list.flatMap(x=>x.products), reviews, payments, leads, orders, notifs,
     users:[ { id:"demo-admin", email:"admin@vitrine.demo", pw:"demo", admin:true }, { id:"demo-merchant", email:"vetu@demo.bj", pw:"demo", admin:false } ] };
 }
 
@@ -320,6 +338,13 @@ function seed(){
    ===================================================================== */
 let sb = null;
 const DB = { get(){ let d = store.get("vt_db", null); if (!d) { d = seed(); store.set("vt_db", d); } return d; }, set(d){ store.set("vt_db", d); } };
+const dd = () => { const d = DB.get(); d.orders = d.orders || []; d.notifs = d.notifs || []; return d; };
+const dNotify = (d, shop_id, kind, title, body, ref) => { d.notifs = d.notifs || []; d.notifs.unshift({ id:uid(), shop_id, kind, title, body, ref, read:false, created_at:new Date().toISOString() }); };
+const findOrd = (d, code, phone) => (d.orders||[]).find(x => x.code.toUpperCase() === String(code).trim().toUpperCase() && digits(x.customer_phone).slice(-8) === digits(phone).slice(-8));
+const MODES = { pickup:["Retrait en boutique","Pickup at the shop"], own:["Mon propre livreur","My own courier"], shop:["Livreur de la boutique","Shop's courier"] };
+const OST = { new:["Nouvelle","New"], accepted:["Acceptée","Accepted"], preparing:["En préparation","Being prepared"], ready:["Prête","Ready"], picked_up:["Récupérée","Picked up"], delivered:["Livrée","Delivered"], cancelled:["Annulée","Cancelled"] };
+const modeL = m => L(...(MODES[m]||MODES.pickup)), ostL = st => L(...(OST[st]||[st,st]));
+const FLOW = m => m === "pickup" ? ["new","accepted","preparing","ready","picked_up"] : ["new","accepted","preparing","ready","picked_up","delivered"];
 const visible = (s, S) => s.status === "active" && s.paid_until && new Date(s.paid_until).getTime() + (S.grace_days||0)*DAY > Date.now();
 const ok = r => { if (r.error) throw r.error; return r.data; };
 const API = {
@@ -354,12 +379,12 @@ const API = {
     if (kind==="view") { let seen = false; try { seen = !!sessionStorage.getItem(k); sessionStorage.setItem(k,"1"); } catch(e){} if (seen) return; }
     if (!LIVE) { const d = DB.get(); const s = d.shops.find(x=>x.id===shopId); if (s) { s[{view:"views",wa:"wa_clicks",web:"web_clicks"}[kind]]++; DB.set(d); } return; }
     sb.rpc("track", { p_shop:shopId, p_kind:kind }).then(()=>{}, ()=>{}); },
-  async addLead(l){ if (!LIVE) { const d = DB.get(); d.leads.unshift({ id:uid(), created_at:new Date().toISOString(), ...l }); DB.set(d); return; } ok(await sb.rpc("add_lead", { p_shop:l.shop_id, p_name:l.name, p_phone:l.phone, p_message:l.message, p_product:l.product||"" })); },
+  async addLead(l){ if (!LIVE) { const d = DB.get(); d.leads.unshift({ id:uid(), created_at:new Date().toISOString(), ...l }); dNotify(d, l.shop_id, "lead", "Nouvelle demande · "+(l.name||""), (l.product?l.product+" — ":"")+(l.message||""), null); DB.set(d); return; } ok(await sb.rpc("add_lead", { p_shop:l.shop_id, p_name:l.name, p_phone:l.phone, p_message:l.message, p_product:l.product||"" })); },
   async leads(shopId){ if (!LIVE) return DB.get().leads.filter(l=>l.shop_id===shopId); return ok(await sb.from("leads").select("*").eq("shop_id", shopId).order("created_at",{ascending:false})); },
   async reviews(shopId, all){ if (!LIVE) return DB.get().reviews.filter(r=>r.shop_id===shopId && (all || r.status==="visible")).sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
     let q = sb.from("reviews").select("*").eq("shop_id", shopId).order("created_at",{ascending:false}); if (!all) q = q.eq("status","visible"); return ok(await q); },
   async allReviews(){ if (!LIVE) return DB.get().reviews; return ok(await sb.from("reviews").select("*").order("created_at",{ascending:false}).limit(300)); },
-  async addReview(r){ if (!LIVE) { const d = DB.get(); d.reviews.unshift({ id:uid(), status:"visible", created_at:new Date().toISOString(), ...r }); const rs = d.reviews.filter(x=>x.shop_id===r.shop_id&&x.status==="visible"); const s = d.shops.find(x=>x.id===r.shop_id); s.rating_count = rs.length; s.rating_avg = rs.reduce((a,x)=>a+x.rating,0)/rs.length; DB.set(d); return; }
+  async addReview(r){ if (!LIVE) { const d = DB.get(); d.reviews.unshift({ id:uid(), status:"visible", created_at:new Date().toISOString(), ...r }); const rs = d.reviews.filter(x=>x.shop_id===r.shop_id&&x.status==="visible"); const s = d.shops.find(x=>x.id===r.shop_id); s.rating_count = rs.length; s.rating_avg = rs.reduce((a,x)=>a+x.rating,0)/rs.length; dNotify(d, r.shop_id, "review", "Nouvel avis "+"★".repeat(r.rating)+" · "+r.name, r.comment, null); DB.set(d); return; }
     ok(await sb.rpc("add_review", { p_shop:r.shop_id, p_name:r.name, p_rating:r.rating, p_comment:r.comment })); },
   async setReview(id, status){ if (!LIVE) { const d = DB.get(); const r = d.reviews.find(x=>x.id===id); r.status = status; const rs = d.reviews.filter(x=>x.shop_id===r.shop_id&&x.status==="visible"); const s = d.shops.find(x=>x.id===r.shop_id); s.rating_count = rs.length; s.rating_avg = rs.length ? rs.reduce((a,x)=>a+x.rating,0)/rs.length : 0; DB.set(d); return; }
     ok(await sb.from("reviews").update({ status }).eq("id", id)); },
@@ -380,6 +405,28 @@ const API = {
     ok(await sb.auth.signInWithPassword({ email, password:pw })); },
   async signUp(email, pw){ if (!LIVE) { const d = DB.get(); if (d.users.some(x=>x.email.toLowerCase()===email.toLowerCase())) throw new Error(L("Un compte existe déjà avec cet email.","An account already exists with this email.")); const u = { id:uid(), email, pw, admin:false }; d.users.push(u); DB.set(d); store.set("vt_session", { id:u.id, email, admin:false }); return true; }
     const r = ok(await sb.auth.signUp({ email, password:pw })); return !!r.session; },
+  // orders & notifications
+  async placeOrder(o){ if (!LIVE) { const d = dd(); const p = d.products.find(x=>x.id===o.product_id); if (!p) throw new Error("unavailable"); const sh = d.shops.find(x=>x.id===p.shop_id);
+      const qty = Math.max(1, Math.min(50, +o.qty||1)), code = "FV-" + Math.random().toString(36).slice(2,8).toUpperCase(), now = new Date().toISOString(), own = o.delivery_mode === "own";
+      d.orders.unshift({ id:uid(), code, shop_id:sh.id, product_id:p.id, product_name:p.name, image:p.image||"", unit_price:p.price, qty, total:p.price*qty, customer_name:o.name, customer_phone:o.phone, delivery_mode:o.delivery_mode, address:o.address||"", preferred_date:o.preferred_date||null, note:o.note||"", courier_name:own?o.courier_name||"":"", courier_phone:own?o.courier_phone||"":"", picked_up_by:"", picked_up_at:null, status:"new", history:[{at:now,status:"new"}], created_at:now, updated_at:now });
+      dNotify(d, sh.id, "order", `Nouvelle commande ${code} · ${qty} × ${p.name}`, `${o.name} — ${money(p.price*qty)} — ${MODES[o.delivery_mode][0]}`, code); DB.set(d); return { code, total:p.price*qty }; }
+    return ok(await sb.rpc("place_order", { p:o })); },
+  async trackOrder(code, phone){ if (!LIVE) { const d = dd(), o = findOrd(d, code, phone); if (!o) return null; const s = d.shops.find(x=>x.id===o.shop_id) || {}; return { ...o, shop_name:s.name, shop_slug:s.slug, shop_whatsapp:s.whatsapp, shop_address:s.address, shop_city:s.city }; }
+    return ok(await sb.rpc("track_order", { p_code:code, p_phone:phone })); },
+  async setCourier(code, phone, name, cphone){ if (!LIVE) { const d = dd(), o = findOrd(d, code, phone); if (!o || ["picked_up","delivered","cancelled"].includes(o.status)) return false;
+      Object.assign(o, { delivery_mode:"own", courier_name:name, courier_phone:cphone, updated_at:new Date().toISOString() }); o.history.push({ at:new Date().toISOString(), status:"courier", by:name }); dNotify(d, o.shop_id, "courier", "Livreur indiqué pour "+o.code, name+" · "+cphone, o.code); DB.set(d); return true; }
+    return ok(await sb.rpc("set_courier", { p_code:code, p_phone:phone, p_name:name, p_cphone:cphone })); },
+  async cancelOrder(code, phone){ if (!LIVE) { const d = dd(), o = findOrd(d, code, phone); if (!o || !["new","accepted"].includes(o.status)) return false;
+      o.status = "cancelled"; o.history.push({ at:new Date().toISOString(), status:"cancelled", by:"client" }); dNotify(d, o.shop_id, "cancel", "Commande annulée par le client · "+o.code, o.customer_name+" — "+o.product_name, o.code); DB.set(d); return true; }
+    return ok(await sb.rpc("cancel_order", { p_code:code, p_phone:phone })); },
+  async orders(shopId){ if (!LIVE) return dd().orders.filter(o=>o.shop_id===shopId); return ok(await sb.from("orders").select("*").eq("shop_id", shopId).order("created_at",{ascending:false}).limit(300)); },
+  async updateOrder(id, status, by){ if (!LIVE) { const d = dd(), o = d.orders.find(x=>x.id===id); const now = new Date().toISOString(); o.status = status; o.updated_at = now;
+      if (status === "picked_up") { o.picked_up_by = by || o.courier_name || o.customer_name; o.picked_up_at = now; } o.history.push({ at:now, status, by:by||"" }); DB.set(d); return; }
+    ok(await sb.rpc("shop_update_order", { p_id:id, p_status:status, p_by:by||"" })); },
+  async notifs(shopId){ if (!LIVE) return dd().notifs.filter(n=>n.shop_id===shopId).slice(0,80); return ok(await sb.from("notifications").select("*").eq("shop_id", shopId).order("created_at",{ascending:false}).limit(80)); },
+  async readNotifs(shopId){ if (!LIVE) { const d = dd(); d.notifs.forEach(n => { if (n.shop_id===shopId) n.read = true; }); DB.set(d); return; } ok(await sb.from("notifications").update({ read:true }).eq("shop_id", shopId).eq("read", false)); },
+  async favorite(shopId, on){ if (!LIVE) { const d = dd(), s = d.shops.find(x=>x.id===shopId); if (!s) return; s.fav_count = Math.max(0, (s.fav_count||0) + (on?1:-1)); if (on) dNotify(d, shopId, "favorite", "Un client a ajouté votre boutique à ses favoris ❤️", "", null); DB.set(d); return; }
+    await sb.rpc("set_favorite", { p_shop:shopId, p_on:on }); },
   async signOut(){ if (!LIVE) return store.set("vt_session", null); await sb.auth.signOut(); },
   async upload(file, max=1200){
     const blob = await compress(file, LIVE ? max : Math.min(max, 640), LIVE ? .82 : .7);
@@ -403,7 +450,7 @@ async function compress(file, max, q){
 let S = { ...DEFAULT_SETTINGS }, SHOPS = [], PRODS = [], ME = null;
 let favs = store.get("vt_favs", []);
 const isFav = id => favs.includes(id);
-function toggleFav(id){ favs = isFav(id) ? favs.filter(x=>x!==id) : [...favs, id]; store.set("vt_favs", favs); }
+function toggleFav(id){ favs = isFav(id) ? favs.filter(x=>x!==id) : [...favs, id]; store.set("vt_favs", favs); API.favorite(id, isFav(id)).catch(()=>{}); }
 function rank(list){ // premium first, then verified, then rating, then newest
   return [...list].sort((a,b) => (b.plan==="premium") - (a.plan==="premium") || (b.verified - a.verified) || (b.rating_avg*Math.min(b.rating_count,5) - a.rating_avg*Math.min(a.rating_count,5)) || (new Date(b.created_at) - new Date(a.created_at)));
 }
@@ -425,7 +472,7 @@ function chrome(route){
   $$(".lang button").forEach(b => b.classList.toggle("on", b.dataset.lang === lang));
   $("#foot").innerHTML = `<div class="cols">
     <div><div style="font-weight:800;font-size:20px;color:#fff">${esc(CONFIG.PLATFORM_NAME)}</div><p>${L("La place de marché qui met en avant les boutiques du Bénin. Découvrez, comparez et commandez directement auprès des commerçants.","The marketplace showcasing Benin's shops. Discover, compare and order directly from merchants.")}</p></div>
-    <div><h4>${L("Acheteurs","Shoppers")}</h4><a href="#shops">${L("Toutes les boutiques","All shops")}</a><a href="#favorites">${L("Mes favoris","My favorites")}</a><a href="#how">${L("Comment ça marche","How it works")}</a></div>
+    <div><h4>${L("Acheteurs","Shoppers")}</h4><a href="#shops">${L("Toutes les boutiques","All shops")}</a><a href="#favorites">${L("Mes favoris","My favorites")}</a><a href="#track">${L("Suivre ma commande","Track my order")}</a><a href="#how">${L("Comment ça marche","How it works")}</a></div>
     <div><h4>${L("Commerçants","Merchants")}</h4><a href="#join">${L("Publier ma boutique","List my shop")}</a><a href="#login">${L("Espace commerçant","Merchant login")}</a><a href="${wa(S.support_whatsapp, "Bonjour "+CONFIG.PLATFORM_NAME)}" target="_blank" rel="noopener">WhatsApp ${L("support","support")}</a><span class="note" style="color:#8FB0A8">${esc(S.support_email)}</span></div>
   </div><div style="border-top:1px solid #16443C;margin-top:24px;padding-top:14px;font-size:12px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px"><span>© ${new Date().getFullYear()} ${esc(CONFIG.PLATFORM_NAME)}</span><span>${L("Les transactions se font directement entre l'acheteur et la boutique.","Transactions happen directly between the shopper and the shop.")}</span></div>`;
 }
@@ -555,7 +602,7 @@ async function pageShop(v, slug){
         const f = Object.fromEntries(new FormData(e.target)); try { await API.addReview({ shop_id:s.id, name:f.name, rating:+f.rating, comment:f.comment }); store.set(k,true); toast(L("Merci pour votre avis ✓","Thanks for your review ✓")); await reloadData(); route(CUR); } catch(err){ toast(L("Erreur, réessayez.","Error, try again.")); } }; }
     if (t==="a") { c.innerHTML = `<div class="two"><div class="panel"><h3>${L("À propos","About")}</h3><p style="white-space:pre-line">${esc(dsc(s))}</p>
         <div class="kv"><b>${L("Ville","City")}</b>${esc(s.city)}${s.address?" — "+esc(s.address):""}</div>${s.hours?`<div class="kv"><b>${L("Horaires","Hours")}</b>${esc(s.hours)}</div>`:""}
-        <div class="kv"><b>${L("Livraison","Delivery")}</b>${s.delivery?L("Oui","Yes"):L("Non — retrait en boutique","No — pickup only")}</div>
+        <div class="kv"><b>${L("Commande","Ordering")}</b>${shopModes(s).map(modeL).join(" · ")}</div>${s.delivery_note?`<div class="kv"><b>${L("Frais de livraison","Delivery fees")}</b>${esc(s.delivery_note)}</div>`:""}
         ${s.email?`<div class="kv"><b>Email</b>${esc(s.email)}</div>`:""}${s.facebook?`<div class="kv"><b>Facebook</b><a href="${esc(s.facebook)}" target="_blank" rel="noopener">${esc(s.facebook)}</a></div>`:""}${s.instagram?`<div class="kv"><b>Instagram</b>${esc(s.instagram)}</div>`:""}
         <div class="kv"><b>${L("Membre depuis","Member since")}</b>${fmtD(s.created_at)}</div></div>
       <form class="panel" id="lf"><h3>${L("Envoyer une demande","Send a request")}</h3><p class="note">${L("La boutique reçoit votre demande et vous recontacte.","The shop receives your request and gets back to you.")}</p>
@@ -572,10 +619,82 @@ function openProduct(id){
   const ov = modal(`<div class="pm"><img src="${esc(p.image||prodArt("🛍️",s.category))}" style="width:100%;aspect-ratio:1;object-fit:cover"><div class="mb">
     <a href="#s-${esc(s.slug)}" style="display:flex;gap:8px;align-items:center;text-decoration:none;margin-bottom:10px"><img src="${esc(shopLogo(s))}" style="width:34px;height:34px;border-radius:50%"><b>${esc(s.name)}</b>${s.verified?`<span class="vchk">✓</span>`:""}</a>
     <h2>${esc(nmP(p))}</h2><div style="font-size:22px;font-weight:800;color:var(--pri)">${money(p.price)}</div><p style="white-space:pre-line;color:#475467">${esc(p.description||"")}</p>
-    <a class="btn wa block" id="pw" target="_blank" rel="noopener" href="${wa(s.whatsapp, msg)}">${L("Commander sur WhatsApp","Order on WhatsApp")}</a>
+    <button class="btn pri block" id="po" type="button">🛒 ${L("Commander","Order now")}</button>
+    <a class="btn wa block" style="margin-top:8px" id="pw" target="_blank" rel="noopener" href="${wa(s.whatsapp, msg)}">${L("Poser une question sur WhatsApp","Ask on WhatsApp")}</a>
     <a class="btn line block" style="margin-top:8px" href="#s-${esc(s.slug)}">${L("Voir la boutique","View the shop")}</a>
-    <p class="note" style="margin-top:12px">${L("La commande et le paiement se font directement avec la boutique.","Ordering and payment happen directly with the shop.")}</p></div></div>`);
-  $("#pw",ov).onclick = () => { API.track(s.id, "wa"); API.addLead({ shop_id:s.id, name:L("Client WhatsApp","WhatsApp customer"), phone:"—", message:L("Clic « Commander sur WhatsApp »","Clicked \"Order on WhatsApp\""), product:p.name }).catch(()=>{}); };
+    <p class="note" style="margin-top:12px">${L("Retrait en boutique, votre livreur ou celui de la boutique. Le paiement se fait directement avec la boutique.","Pickup, your own courier or the shop's courier. Payment is made directly with the shop.")}</p></div></div>`);
+  $("#po",ov).onclick = () => orderForm(p, s);
+  $("#pw",ov).onclick = () => { API.track(s.id, "wa"); API.addLead({ shop_id:s.id, name:L("Client WhatsApp","WhatsApp customer"), phone:"—", message:L("Question sur WhatsApp","Asked on WhatsApp"), product:p.name }).catch(()=>{}); };
+}
+const shopModes = s => [s.pickup !== false && "pickup", "own", s.delivery && "shop"].filter(Boolean);
+function orderForm(p, s){
+  const modes = shopModes(s); const saved = store.get("vt_me", {});
+  const ov = modal(`<form class="mb" id="of"><h3 style="margin-top:0">🛒 ${L("Commander","Order")}</h3>
+    <div class="oc" style="margin-bottom:12px"><img src="${esc(p.image||prodArt("🛍️",s.category))}"><div><b>${esc(nmP(p))}</b><div class="note">${esc(s.name)}</div><div style="font-weight:800;color:var(--pri)">${money(p.price)}</div></div></div>
+    <div class="r2"><label class="f"><span>${L("Quantité","Quantity")}</span><input class="in" name="qty" type="number" min="1" max="50" value="1" required></label>
+      <div class="f"><span>Total</span><div id="otot" style="font-size:22px;font-weight:800;color:var(--pri);padding-top:6px">${money(p.price)}</div></div></div>
+    <div class="r2"><label class="f"><span>${L("Votre nom","Your name")}</span><input class="in" name="name" required maxlength="80" value="${esc(saved.name||"")}"></label>
+      <label class="f"><span>${L("Téléphone / WhatsApp","Phone / WhatsApp")}</span><input class="in" name="phone" required inputmode="tel" value="${esc(saved.phone||"")}" placeholder="01 97 00 00 00"></label></div>
+    <div class="f"><span>${L("Comment recevoir votre commande ?","How do you want to receive it?")}</span></div>
+    <div class="modes">${modes.map((m,i)=>`<label><input type="radio" name="delivery_mode" value="${m}" ${i===0?"checked":""}><div><b>${{pickup:"🏪",own:"🛵",shop:"🚚"}[m]} ${modeL(m)}</b><small>${{
+      pickup:L("Vous passez récupérer la commande à la boutique","You collect the order at the shop")+(s.address||s.city?" — "+esc(s.address&&s.address.includes(s.city)?s.address:[s.address,s.city].filter(Boolean).join(", ")):""),
+      own:L("Vous envoyez votre livreur (Gozem, zem, ami…) récupérer le colis","You send your own courier (Gozem, moto-taxi, friend…) to collect it"),
+      shop:L("La boutique livre chez vous","The shop delivers to you")+(s.delivery_note?" — "+esc(s.delivery_note):" — "+L("frais à convenir","fee to be agreed"))}[m]}</small></div></label>`).join("")}</div>
+    <div id="mShop" class="hidden"><label class="f"><span>${L("Adresse de livraison","Delivery address")}</span><textarea class="in" name="address" placeholder="${L("Quartier, repère, ville","Area, landmark, city")}"></textarea></label></div>
+    <div id="mOwn" class="hidden"><p class="note" style="margin:0 0 6px">${L("Vous pouvez aussi indiquer votre livreur plus tard, depuis « Suivre ma commande ».","You can also add your courier later from \"Track my order\".")}</p>
+      <div class="r2"><label class="f"><span>${L("Nom du livreur","Courier name")}</span><input class="in" name="courier_name"></label><label class="f"><span>${L("Téléphone du livreur","Courier phone")}</span><input class="in" name="courier_phone" inputmode="tel"></label></div></div>
+    <div class="r2"><label class="f"><span>${L("Date souhaitée (facultatif)","Preferred date (optional)")}</span><input class="in" type="date" name="preferred_date"></label>
+      <label class="f"><span>${L("Note (taille, couleur…)","Note (size, colour…)")}</span><input class="in" name="note" maxlength="300"></label></div>
+    <button class="btn pri block" id="osb">${L("Envoyer la commande","Send order")}</button>
+    <p class="note" style="margin-top:10px">${L("La boutique est notifiée immédiatement et vous recontacte pour confirmer. Le paiement se fait directement avec la boutique.","The shop is notified instantly and will contact you to confirm. Payment is made directly with the shop.")}</p></form>`);
+  const f = $("#of", ov);
+  const upd = () => { const m = f.delivery_mode.value; $("#mShop",ov).classList.toggle("hidden", m!=="shop"); $("#mOwn",ov).classList.toggle("hidden", m!=="own"); f.address.required = m==="shop"; $("#otot",ov).textContent = money(p.price * Math.max(1, +f.qty.value||1)); };
+  f.addEventListener("input", upd); f.addEventListener("change", upd); upd();
+  f.onsubmit = async e => { e.preventDefault(); const d = Object.fromEntries(new FormData(f)); if (digits(d.phone).length < 8) return toast(L("Numéro de téléphone invalide.","Invalid phone number."));
+    $("#osb",ov).disabled = true;
+    try { const r = await API.placeOrder({ ...d, product_id:p.id, qty:+d.qty||1, lang });
+      store.set("vt_me", { name:d.name, phone:d.phone }); const mine = store.get("vt_orders", []); mine.unshift({ code:r.code, phone:d.phone, shop:s.name, product:nmP(p), at:new Date().toISOString() }); store.set("vt_orders", mine.slice(0,30));
+      const txt = L(`Bonjour ${s.name}, je viens de passer la commande ${r.code} sur ${CONFIG.PLATFORM_NAME} :\n• ${d.qty} × ${p.name} — ${money(r.total)}\n• ${modeL(d.delivery_mode)}${d.address?"\n• Adresse : "+d.address:""}${d.courier_name?"\n• Livreur : "+d.courier_name+" "+(d.courier_phone||""):""}${d.note?"\n• Note : "+d.note:""}\nNom : ${d.name} — ${d.phone}`,
+        `Hello ${s.name}, I just placed order ${r.code} on ${CONFIG.PLATFORM_NAME}:\n• ${d.qty} × ${nmP(p)} — ${money(r.total)}\n• ${modeL(d.delivery_mode)}${d.address?"\n• Address: "+d.address:""}${d.courier_name?"\n• Courier: "+d.courier_name+" "+(d.courier_phone||""):""}${d.note?"\n• Note: "+d.note:""}\nName: ${d.name} — ${d.phone}`);
+      const ov2 = modal(`<div class="mb" style="text-align:center"><div style="font-size:44px">✅</div><h3>${L("Commande envoyée !","Order sent!")}</h3>
+        <p>${L("Votre numéro de commande","Your order number")}</p><div style="font-size:28px;font-weight:800;letter-spacing:.06em;color:var(--pri)">${esc(r.code)}</div>
+        <p class="note">${L("La boutique a été notifiée. Pour aller plus vite, envoyez-lui aussi le récapitulatif sur WhatsApp.","The shop has been notified. To speed things up, also send the summary on WhatsApp.")}</p>
+        <a class="btn wa block" target="_blank" rel="noopener" href="${wa(s.whatsapp, txt)}">${L("Envoyer le récapitulatif sur WhatsApp","Send the summary on WhatsApp")}</a>
+        <a class="btn line block" style="margin-top:8px" href="#track-${esc(r.code)}">${L("Suivre ma commande","Track my order")}</a></div>`, true);
+    } catch(err){ $("#osb",ov).disabled = false; const m = String(err.message||err); toast(/address/.test(m)?L("Indiquez l'adresse de livraison.","Enter the delivery address."):/unavailable/.test(m)?L("Ce produit n'est plus disponible.","This product is no longer available."):L("Erreur, réessayez.","Error, try again.")); } };
+}
+
+/* ---------- order tracking (customers) ---------- */
+async function pageTrack(v, code){
+  const mine = store.get("vt_orders", []); const hit = code && mine.find(x=>x.code.toUpperCase()===code.toUpperCase()); const me = store.get("vt_me", {});
+  v.innerHTML = `<div class="wrap" style="padding:28px 18px 60px;max-width:720px"><div class="eyebrow">📦</div><h2 style="margin-top:4px">${L("Suivre ma commande","Track my order")}</h2>
+    <form class="panel" id="tf"><div class="r2"><label class="f"><span>${L("N° de commande","Order number")}</span><input class="in" name="code" required value="${esc(code||"")}" placeholder="FV-XXXXXX" style="text-transform:uppercase"></label>
+      <label class="f"><span>${L("Téléphone utilisé","Phone used")}</span><input class="in" name="phone" required inputmode="tel" value="${esc(hit?hit.phone:me.phone||"")}"></label></div><button class="btn pri">${L("Voir le suivi","Track")}</button></form>
+    ${mine.length?`<div style="margin:14px 0 4px" class="note">${L("Mes commandes sur cet appareil","My orders on this device")}</div><div style="display:flex;gap:6px;flex-wrap:wrap">${mine.map(o=>`<a class="btn line sm" href="#track-${esc(o.code)}">${esc(o.code)} · ${esc(o.shop)}</a>`).join("")}</div>`:""}
+    <div id="tres" style="margin-top:16px"></div></div>`;
+  const show = async (c, ph) => { const box = $("#tres"); box.innerHTML = `<span class="spin"></span>`;
+    let o = null; try { o = await API.trackOrder(c, ph); } catch(e){}
+    if (!o) { box.innerHTML = `<div class="box r">${L("Commande introuvable. Vérifiez le numéro et le téléphone.","Order not found. Check the number and phone.")}</div>`; return; }
+    const flow = FLOW(o.delivery_mode), idx = flow.indexOf(o.status), done = ["picked_up","delivered","cancelled"].includes(o.status) && !(o.status==="picked_up" && o.delivery_mode!=="pickup");
+    box.innerHTML = `<div class="panel"><div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><b style="font-size:18px">${esc(o.code)}</b><span class="st ${o.status}">${ostL(o.status)}</span></div>
+      ${o.status!=="cancelled"?`<div class="steps">${flow.map((x,i)=>`<div class="${i<=idx?"on":""}" title="${ostL(x)}"></div>`).join("")}</div><div class="note" style="margin-top:-6px">${flow.map(ostL).join(" → ")}</div>`:""}
+      <div class="oc" style="margin-top:14px"><img src="${esc(o.image||prodArt("🛍️","autre"))}"><div><b>${esc(o.qty)} × ${esc(o.product_name)}</b><div style="font-weight:800;color:var(--pri)">${money(o.total)}</div><div class="note">${L("Boutique","Shop")} : <a href="#s-${esc(o.shop_slug)}">${esc(o.shop_name)}</a></div></div></div>
+      <div class="kv"><b>${L("Réception","Delivery")}</b>${modeL(o.delivery_mode)}${o.delivery_mode==="pickup"&&(o.shop_address||o.shop_city)?" — "+esc([o.shop_address,o.shop_city].filter(Boolean).join(", ")):""}</div>
+      ${o.address?`<div class="kv"><b>${L("Adresse","Address")}</b>${esc(o.address)}</div>`:""}
+      ${o.courier_name?`<div class="kv"><b>${L("Livreur","Courier")}</b>${esc(o.courier_name)} ${esc(o.courier_phone||"")}</div>`:""}
+      ${o.picked_up_at?`<div class="kv"><b>${L("Récupérée par","Picked up by")}</b>${esc(o.picked_up_by)} — ${new Date(o.picked_up_at).toLocaleString(lang==="en"?"en-GB":"fr-FR",{dateStyle:"medium",timeStyle:"short"})}</div>`:""}
+      <div class="hist">${(o.history||[]).map(h=>`${new Date(h.at).toLocaleString(lang==="en"?"en-GB":"fr-FR",{dateStyle:"short",timeStyle:"short"})} — ${h.status==="courier"?L("Livreur indiqué","Courier added"):ostL(h.status)}${h.by?" ("+esc(h.by)+")":""}`).join("<br>")}</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"><a class="btn wa sm" target="_blank" rel="noopener" href="${wa(o.shop_whatsapp, L(`Bonjour ${o.shop_name}, au sujet de ma commande ${o.code}…`,`Hello ${o.shop_name}, about my order ${o.code}…`))}">WhatsApp ${L("boutique","shop")}</a>
+        ${["new","accepted"].includes(o.status)?`<button class="btn line sm" id="tcx" type="button">${L("Annuler la commande","Cancel order")}</button>`:""}</div></div>
+      ${!done && o.status!=="cancelled"?`<form class="panel" id="cf" style="margin-top:12px"><h3>🛵 ${o.delivery_mode==="own"?L("Mon livreur","My courier"):L("Envoyer plutôt mon propre livreur ?","Send my own courier instead?")}</h3>
+        <p class="note">${L("La boutique est notifiée et remettra le colis à cette personne.","The shop is notified and will hand the parcel to this person.")}</p>
+        <div class="r2"><label class="f"><span>${L("Nom du livreur","Courier name")}</span><input class="in" name="n" required value="${esc(o.courier_name||"")}"></label><label class="f"><span>${L("Téléphone du livreur","Courier phone")}</span><input class="in" name="p" required inputmode="tel" value="${esc(o.courier_phone||"")}"></label></div>
+        <button class="btn pri">${L("Envoyer à la boutique","Send to the shop")}</button></form>`:""}`;
+    const cx = $("#tcx"); if (cx) cx.onclick = async () => { if (await ask(L("Annuler cette commande ?","Cancel this order?"), L("Annuler la commande","Cancel order"))) { await API.cancelOrder(c, ph); toast(L("Commande annulée","Order cancelled")); show(c, ph); } };
+    const cf = $("#cf"); if (cf) cf.onsubmit = async e => { e.preventDefault(); const fd = Object.fromEntries(new FormData(cf)); if (await API.setCourier(c, ph, fd.n.trim(), fd.p.trim())) { toast(L("Livreur envoyé à la boutique ✓","Courier sent to the shop ✓")); show(c, ph); } else toast(L("Impossible de modifier cette commande.","This order can't be changed.")); };
+  };
+  $("#tf").onsubmit = e => { e.preventDefault(); const fd = Object.fromEntries(new FormData(e.target)); show(fd.code.trim().toUpperCase(), fd.phone); };
+  if (code && (hit || me.phone)) show(code, hit ? hit.phone : me.phone);
 }
 
 /* ---------- join / pricing ---------- */
@@ -635,7 +754,21 @@ function pageLogin(v){
 /* =====================================================================
    MERCHANT DASHBOARD
    ===================================================================== */
-let MT = "home";
+let MT = "home", OF = "open", WATCH = null;
+const intlPh = n => { const d = digits(n); return d.length === 10 && d.startsWith("01") ? "229" + d : d.length === 8 ? "229" + d : d; };
+function setBadge(n){ $$(".nbadge").forEach(el => { if (el.closest("[data-mt=notifs]")) { el.textContent = n; el.style.display = n ? "" : "none"; } }); }
+function beep(){ try { const a = new (window.AudioContext||window.webkitAudioContext)(); [0,.18].forEach(t => { const o = a.createOscillator(), g = a.createGain(); o.frequency.value = t ? 1175 : 880; g.gain.setValueAtTime(.0001, a.currentTime+t); g.gain.exponentialRampToValueAtTime(.25, a.currentTime+t+.02); g.gain.exponentialRampToValueAtTime(.0001, a.currentTime+t+.16); o.connect(g).connect(a.destination); o.start(a.currentTime+t); o.stop(a.currentTime+t+.18); }); } catch(e){} }
+function stopWatch(){ if (!WATCH) return; try { if (WATCH.ch) sb.removeChannel(WATCH.ch); } catch(e){} clearInterval(WATCH.t); WATCH = null; }
+function startWatch(shop, v){
+  if (WATCH && WATCH.id === shop.id) return; stopWatch(); const W = WATCH = { id:shop.id, seen:null };
+  const alertN = n => { if (W.seen && W.seen.has(n.id)) return; (W.seen ||= new Set()).add(n.id); beep(); toast("🔔 " + n.title, 6000);
+    try { if (Notification.permission === "granted") new Notification(CONFIG.PLATFORM_NAME + " — " + shop.name, { body:n.title + (n.body ? "\n" + n.body : ""), tag:n.id }); } catch(e){}
+    const cur = $$("[data-mt=notifs] .nbadge")[0]; setBadge((+(cur?.textContent)||0) + 1); };
+  const poll = async () => { try { const ns = await API.notifs(shop.id); if (WATCH !== W) return;
+      if (!W.seen) W.seen = new Set(ns.map(n=>n.id)); else ns.filter(n => !W.seen.has(n.id)).reverse().forEach(alertN); } catch(e){} };
+  poll(); W.t = setInterval(poll, LIVE ? 30000 : 6000);
+  if (LIVE) try { W.ch = sb.channel("notif-" + shop.id).on("postgres_changes", { event:"INSERT", schema:"public", table:"notifications", filter:`shop_id=eq.${shop.id}` }, p => { if (W.seen) alertN(p.new); }).subscribe(); } catch(e){}
+}
 function subState(s){
   const now = Date.now(), until = s.paid_until ? new Date(s.paid_until).getTime() : 0, left = Math.ceil((until - now)/DAY);
   if (s.status === "suspended") return { k:"suspended", txt:L("Suspendue par l'administration. Contactez le support.","Suspended by the admin. Contact support."), left };
@@ -649,27 +782,77 @@ async function pageMerchant(v){
   if (ME.admin) { go("admin"); return; }
   const s = await API.myShop();
   if (!s) { pageSignupShop(v); return; }
-  const [prods, leads, revs, pays] = await Promise.all([API.products(s.id), API.leads(s.id), API.reviews(s.id, true), API.payments(s.id)]);
-  const st = subState(s);
-  const tabs = [["home",L("Aperçu","Overview")],["shop",L("Ma vitrine","My storefront")],["products",L("Produits","Products")+` (${prods.length})`],["leads",L("Demandes","Requests")+` (${leads.length})`],["reviews",L("Avis","Reviews")+` (${revs.length})`],["sub",L("Abonnement","Subscription")]];
+  const [prods, leads, revs, pays, ords, nts] = await Promise.all([API.products(s.id), API.leads(s.id), API.reviews(s.id, true), API.payments(s.id), API.orders(s.id).catch(()=>[]), API.notifs(s.id).catch(()=>[])]);
+  const st = subState(s); const unread = nts.filter(n=>!n.read).length, newO = ords.filter(o=>o.status==="new").length;
+  const tabs = [["home",L("Aperçu","Overview")],["orders",L("Commandes","Orders")+(newO?` <span class="nbadge">${newO}</span>`:` (${ords.length})`)],["notifs",`🔔 ${L("Notifications","Notifications")}<span class="nbadge" ${unread?"":'style="display:none"'}>${unread}</span>`],["shop",L("Ma vitrine","My storefront")],["products",L("Produits","Products")+` (${prods.length})`],["leads",L("Demandes","Requests")+` (${leads.length})`],["reviews",L("Avis","Reviews")+` (${revs.length})`],["sub",L("Abonnement","Subscription")]];
   v.innerHTML = `<div class="dash"><div class="wrap">
     <div style="display:flex;gap:12px;align-items:center;margin-bottom:14px;flex-wrap:wrap"><img src="${esc(shopLogo(s))}" style="width:52px;height:52px;border-radius:14px;object-fit:cover"><div><h2 style="margin:0;font-size:26px">${esc(s.name)}</h2><span class="note">${esc(ME.email)}</span></div>
-      <div style="margin-left:auto;display:flex;gap:8px"><a class="btn line sm" href="#s-${esc(s.slug)}">${L("Voir ma vitrine","View my storefront")}</a><button class="btn line sm" id="lo">${L("Déconnexion","Sign out")}</button></div></div>
+      <div style="margin-left:auto;display:flex;gap:8px"><button class="btn line sm bell" data-mt="notifs" title="Notifications">🔔<span class="nbadge" ${unread?"":'style="display:none"'}>${unread}</span></button><a class="btn line sm" href="#s-${esc(s.slug)}">${L("Voir ma vitrine","View my storefront")}</a><button class="btn line sm" id="lo">${L("Déconnexion","Sign out")}</button></div></div>
     <div class="box ${st.k==="active"?"g":st.k==="pending"?"y":"r"}" style="margin-bottom:14px">${st.txt} ${st.k!=="active"||st.left<=7?`<a href="#merchant" data-mt="sub" style="font-weight:700">${L("Gérer l'abonnement →","Manage subscription →")}</a>`:""}</div>
     <div class="dtabs">${tabs.map(([k,t])=>`<button data-mt="${k}" class="${MT===k?"on":""}">${t}</button>`).join("")}</div><div id="mb"></div></div></div>`;
   $("#lo").onclick = async () => { await API.signOut(); ME = null; go("home"); };
   v.onclick = e => { const b = e.target.closest("[data-mt]"); if (b) { e.preventDefault(); MT = b.dataset.mt; pageMerchant(v); } };
-  const box = $("#mb");
+  const box = $("#mb"); startWatch(s, v);
   const prem = s.plan === "premium", maxP = prem ? S.max_products_premium : S.max_products_basic, maxG = prem ? S.max_gallery_premium : S.max_gallery_basic;
   if (MT === "home") {
     const ctr = s.views ? Math.round((s.wa_clicks + s.web_clicks) / s.views * 100) : 0;
     const filled = [s.logo, s.cover, s.desc_fr, (s.gallery||[]).length, prods.length >= 3, s.hours].filter(Boolean).length;
-    box.innerHTML = `<div class="kpis"><div class="kpi"><div class="l">${L("Vues de la vitrine","Storefront views")}</div><div class="v">${s.views||0}</div></div><div class="kpi"><div class="l">${L("Clics WhatsApp","WhatsApp clicks")}</div><div class="v">${s.wa_clicks||0}</div></div><div class="kpi"><div class="l">${L("Clics site web","Website clicks")}</div><div class="v">${s.web_clicks||0}</div></div><div class="kpi"><div class="l">${L("Taux de contact","Contact rate")}</div><div class="v">${ctr}%</div></div><div class="kpi"><div class="l">${L("Demandes reçues","Requests")}</div><div class="v">${leads.length}</div></div><div class="kpi"><div class="l">${L("Note moyenne","Avg rating")}</div><div class="v">${s.rating_count?(+s.rating_avg).toFixed(1)+" ★":"—"}</div></div></div>
+    box.innerHTML = `<div class="kpis"><div class="kpi"><div class="l">${L("Commandes","Orders")}</div><div class="v">${ords.length}${newO?` <span class="nbadge">${newO} ${L("nouv.","new")}</span>`:""}</div></div><div class="kpi"><div class="l">${L("Favoris","Favorites")}</div><div class="v">❤️ ${s.fav_count||0}</div></div><div class="kpi"><div class="l">${L("Vues de la vitrine","Storefront views")}</div><div class="v">${s.views||0}</div></div><div class="kpi"><div class="l">${L("Clics WhatsApp","WhatsApp clicks")}</div><div class="v">${s.wa_clicks||0}</div></div><div class="kpi"><div class="l">${L("Clics site web","Website clicks")}</div><div class="v">${s.web_clicks||0}</div></div><div class="kpi"><div class="l">${L("Taux de contact","Contact rate")}</div><div class="v">${ctr}%</div></div><div class="kpi"><div class="l">${L("Demandes reçues","Requests")}</div><div class="v">${leads.length}</div></div><div class="kpi"><div class="l">${L("Note moyenne","Avg rating")}</div><div class="v">${s.rating_count?(+s.rating_avg).toFixed(1)+" ★":"—"}</div></div></div>
       <div class="two"><div class="panel"><h3>${L("Complétez votre vitrine","Complete your storefront")} — ${Math.round(filled/6*100)}%</h3><div style="height:8px;background:var(--line);border-radius:8px;overflow:hidden;margin-bottom:12px"><div style="height:100%;width:${filled/6*100}%;background:var(--pri2)"></div></div>
         ${[[s.logo,L("Ajouter votre logo","Add your logo")],[s.cover,L("Ajouter une photo de couverture","Add a cover photo")],[s.desc_fr,L("Écrire une description","Write a description")],[(s.gallery||[]).length,L("Ajouter des photos à la galerie","Add gallery photos")],[prods.length>=3,L("Publier au moins 3 produits","List at least 3 products")],[s.hours,L("Indiquer vos horaires","Add your opening hours")]].map(([d,t])=>`<div style="padding:5px 0">${d?"✅":"⬜"} ${t}</div>`).join("")}</div>
        <div class="panel">${prem?`<h3>★ ${L("Vous êtes Premium","You're Premium")}</h3><p class="note">${L("Votre boutique apparaît dans la bannière « À la une » de l'accueil et en tête des résultats. Pensez à mettre à jour votre message promotionnel.","Your shop appears in the homepage \"Featured\" banner and at the top of results. Keep your promo message fresh.")}</p><button class="btn pri sm" data-mt="shop">${L("Modifier ma promo","Edit my promo")}</button>`:
          `<h3>${L("Passez Premium","Go Premium")}</h3><p class="note">${L("Apparaissez dans la bannière « À la une » dès l'ouverture de l'application, en tête des recherches et dans « Produits à la une ».","Appear in the \"Featured\" banner as soon as the app opens, at the top of searches and in \"Featured products\".")}</p><button class="btn acc sm" data-mt="sub">${L("Découvrir Premium","Discover Premium")}</button>`}
          <hr style="border:0;border-top:1px solid var(--line);margin:16px 0"><h3 style="font-size:18px">${L("Partagez votre vitrine","Share your storefront")}</h3><input class="in" readonly value="${esc(baseUrl()+"#s-"+s.slug)}" onclick="this.select()"><p class="note">${L("Mettez ce lien dans votre statut WhatsApp, votre bio Instagram et sur Facebook.","Put this link in your WhatsApp status, Instagram bio and on Facebook.")}</p></div></div>`;
+  }
+  if (MT === "orders") {
+    const groups = { open:o=>!["picked_up","delivered","cancelled"].includes(o.status)||(o.status==="picked_up"&&o.delivery_mode!=="pickup"), done:o=>!groups.open(o), all:()=>true };
+    const list = ords.filter(groups[OF] || groups.all);
+    const dt = d => new Date(d).toLocaleString(lang==="en"?"en-GB":"fr-FR",{dateStyle:"short",timeStyle:"short"});
+    const custMsg = o => ({ accepted:L(`Bonjour ${o.customer_name}, votre commande ${o.code} (${o.product_name}) est acceptée ✅. Nous la préparons.`,`Hello ${o.customer_name}, your order ${o.code} (${o.product_name}) is accepted ✅. We're preparing it.`),
+      ready: o.delivery_mode==="pickup" ? L(`Bonjour ${o.customer_name}, votre commande ${o.code} est prête ✅. Vous pouvez passer la récupérer${s.address?" à "+s.address:""}${s.hours?" ("+s.hours+")":""}.`,`Hello ${o.customer_name}, your order ${o.code} is ready ✅. You can collect it${s.address?" at "+s.address:""}${s.hours?" ("+s.hours+")":""}.`)
+           : o.delivery_mode==="own" ? L(`Bonjour ${o.customer_name}, votre commande ${o.code} est prête ✅. Votre livreur ${o.courier_name||""} peut passer la récupérer${s.address?" à "+s.address:""}.`,`Hello ${o.customer_name}, your order ${o.code} is ready ✅. Your courier ${o.courier_name||""} can collect it${s.address?" at "+s.address:""}.`)
+           : L(`Bonjour ${o.customer_name}, votre commande ${o.code} est prête ✅. Notre livreur part bientôt pour : ${o.address}.`,`Hello ${o.customer_name}, your order ${o.code} is ready ✅. Our courier is leaving soon for: ${o.address}.`),
+      picked_up: L(`Bonjour ${o.customer_name}, votre commande ${o.code} a été récupérée par ${o.picked_up_by||o.courier_name||"le livreur"} le ${o.picked_up_at?dt(o.picked_up_at):dt(Date.now())}. 🛵`,`Hello ${o.customer_name}, your order ${o.code} was picked up by ${o.picked_up_by||o.courier_name||"the courier"} on ${o.picked_up_at?dt(o.picked_up_at):dt(Date.now())}. 🛵`),
+      delivered: L(`Bonjour ${o.customer_name}, votre commande ${o.code} est livrée. Merci et à bientôt ! N'hésitez pas à laisser un avis sur ${CONFIG.PLATFORM_NAME}.`,`Hello ${o.customer_name}, your order ${o.code} has been delivered. Thank you! Feel free to leave a review on ${CONFIG.PLATFORM_NAME}.`),
+      cancelled: L(`Bonjour ${o.customer_name}, votre commande ${o.code} a été annulée.`,`Hello ${o.customer_name}, your order ${o.code} was cancelled.`) }[o.status] || L(`Bonjour ${o.customer_name}, merci pour votre commande ${o.code} sur ${CONFIG.PLATFORM_NAME}.`,`Hello ${o.customer_name}, thanks for your order ${o.code} on ${CONFIG.PLATFORM_NAME}.`));
+    const nextBtn = o => { const fl = FLOW(o.delivery_mode), i = fl.indexOf(o.status); if (o.status==="cancelled" || i<0 || i===fl.length-1) return "";
+      const nx = fl[i+1]; const lbl = { accepted:L("✅ Accepter","✅ Accept"), preparing:L("🧵 En préparation","🧵 Preparing"), ready:L("📦 Marquer prête","📦 Mark ready"),
+        picked_up: o.delivery_mode==="pickup"?L("🏪 Récupérée par le client","🏪 Collected by customer"):o.delivery_mode==="own"?L("🛵 Récupérée par le livreur du client","🛵 Picked up by customer's courier"):L("🚚 Partie avec notre livreur","🚚 Left with our courier"), delivered:L("🎉 Livrée","🎉 Delivered") }[nx];
+      return `<button class="btn pri sm" data-on="${o.id}" data-to="${nx}">${lbl}</button>`; };
+    box.innerHTML = `<div class="dtabs" style="margin-bottom:12px">${[["open",L("En cours","Open")],["done",L("Terminées","Completed")],["all",L("Toutes","All")]].map(([k,t])=>`<button data-of="${k}" class="${OF===k?"on":""}">${t} (${ords.filter(groups[k]).length})</button>`).join("")}</div>` +
+      (list.length ? list.map(o=>`<div class="panel" style="margin-bottom:10px;${o.status==="new"?"border:2px solid var(--acc)":""}">
+        <div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:center"><b>${esc(o.code)}</b><span class="st ${o.status}">${ostL(o.status)}</span><span class="note" style="margin-left:auto">${dt(o.created_at)}</span></div>
+        <div class="oc" style="margin-top:10px"><img src="${esc(o.image||prodArt("🛍️",s.category))}"><div style="flex:1"><b>${esc(o.qty)} × ${esc(o.product_name)}</b><div style="font-weight:800;color:var(--pri)">${money(o.total)}</div>${o.note?`<div class="note">📝 ${esc(o.note)}</div>`:""}</div></div>
+        <div class="kv"><b>${L("Client","Customer")}</b>${esc(o.customer_name)} · <a href="tel:+${digits(intlPh(o.customer_phone))}">${esc(o.customer_phone)}</a></div>
+        <div class="kv"><b>${L("Réception","Delivery")}</b>${{pickup:"🏪",own:"🛵",shop:"🚚"}[o.delivery_mode]} ${modeL(o.delivery_mode)}</div>
+        ${o.address?`<div class="kv"><b>${L("Adresse","Address")}</b>${esc(o.address)}</div>`:""}
+        ${o.delivery_mode==="own"?`<div class="kv"><b>${L("Livreur du client","Customer's courier")}</b>${o.courier_name?esc(o.courier_name)+" · "+esc(o.courier_phone||""):`<span class="note">${L("pas encore indiqué","not given yet")}</span>`}</div>`:""}
+        ${o.preferred_date?`<div class="kv"><b>${L("Date souhaitée","Preferred date")}</b>${fmtD(o.preferred_date)}</div>`:""}
+        ${o.picked_up_at?`<div class="kv"><b>${L("Récupérée","Picked up")}</b>${esc(o.picked_up_by)} — ${dt(o.picked_up_at)}</div>`:""}
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px">${nextBtn(o)}
+          <a class="btn wa sm" target="_blank" rel="noopener" href="${wa(intlPh(o.customer_phone), custMsg(o))}">${L("Prévenir le client","Notify customer")}</a>
+          ${o.delivery_mode==="own"&&o.courier_phone?`<a class="btn line sm" target="_blank" rel="noopener" href="${wa(intlPh(o.courier_phone), L(`Bonjour ${o.courier_name}, la commande ${o.code} de ${o.customer_name} est ${o.status==="ready"?"prête à récupérer":"en préparation"}${s.address?" — "+s.address:""}.`,`Hello ${o.courier_name}, order ${o.code} for ${o.customer_name} is ${o.status==="ready"?"ready for pickup":"being prepared"}${s.address?" — "+s.address:""}.`))}">🛵 ${L("Contacter le livreur","Contact courier")}</a>`:""}
+          ${!["picked_up","delivered","cancelled"].includes(o.status)?`<button class="btn line sm" data-on="${o.id}" data-to="cancelled">${L("Annuler","Cancel")}</button>`:""}</div>
+        <div class="hist">${(o.history||[]).map(h=>`${dt(h.at)} — ${h.status==="courier"?L("Livreur indiqué par le client","Courier added by customer"):ostL(h.status)}${h.by?" ("+esc(h.by)+")":""}`).join(" · ")}</div></div>`).join("")
+      : `<div class="empty">${L("Aucune commande ici pour l'instant. Partagez le lien de votre vitrine !","No orders here yet. Share your storefront link!")}</div>`);
+    $$("[data-of]", box).forEach(b => b.onclick = () => { OF = b.dataset.of; pageMerchant(v); });
+    $$("[data-on]", box).forEach(b => b.onclick = async () => { const o = ords.find(x=>x.id===b.dataset.on), to = b.dataset.to; let by = "";
+      if (to === "cancelled" && !(await ask(L("Annuler cette commande ?","Cancel this order?"), L("Annuler la commande","Cancel order")))) return;
+      if (to === "picked_up") { by = await new Promise(res => { const ov = modal(`<form class="mb" id="pk"><h3 style="margin-top:0">${L("Qui a récupéré la commande ?","Who picked up the order?")}</h3>
+          <label class="f"><span>${L("Nom","Name")}</span><input class="in" name="by" required value="${esc(o.delivery_mode==="pickup"?o.customer_name:o.courier_name||"")}"></label>
+          <p class="note">${L("Date et heure enregistrées automatiquement :","Date and time recorded automatically:")} ${dt(Date.now())}</p><button class="btn pri block">${L("Confirmer","Confirm")}</button></form>`, true);
+          $("#pk",ov).onsubmit = e => { e.preventDefault(); const n = e.target.by.value.trim(); closeModal(); res(n); }; $(".x",ov).addEventListener("click", () => res(null)); });
+        if (by === null) return; }
+      try { await API.updateOrder(o.id, to, by); toast(L("Commande mise à jour ✓ — pensez à prévenir le client","Order updated ✓ — remember to notify the customer")); pageMerchant(v); } catch(err){ toast(err.message||"Erreur"); } });
+  }
+  if (MT === "notifs") {
+    const ic = { order:"🛒", lead:"💬", favorite:"❤️", review:"⭐", courier:"🛵", cancel:"✖️" };
+    const perm = typeof Notification !== "undefined" ? Notification.permission : "unsupported";
+    box.innerHTML = `${perm==="default"?`<div class="box y" style="margin-bottom:12px">🔔 ${L("Recevez une alerte sur cet appareil dès qu'un client commande, pose une question ou ajoute votre boutique en favori.","Get an alert on this device as soon as a customer orders, asks a question or favorites your shop.")} <button class="btn pri sm" id="np2" style="margin-top:8px">${L("Activer les alertes","Turn on alerts")}</button></div>`:""}
+      <div class="panel" style="padding:0">${nts.length ? nts.map(n=>`<div class="ni ${n.read?"":"unread"}" ${n.kind==="order"||n.kind==="courier"||n.kind==="cancel"?'data-mt="orders"':n.kind==="lead"?'data-mt="leads"':n.kind==="review"?'data-mt="reviews"':""} style="cursor:pointer"><div class="ic">${ic[n.kind]||"🔔"}</div><div style="flex:1"><b style="font-size:14px">${esc(n.title)}</b>${n.body?`<div class="note">${esc(n.body)}</div>`:""}<div class="note" style="font-size:11px">${new Date(n.created_at).toLocaleString(lang==="en"?"en-GB":"fr-FR",{dateStyle:"short",timeStyle:"short"})}</div></div></div>`).join("")
+        : `<div class="empty">${L("Aucune notification pour l'instant.","No notifications yet.")}</div>`}</div>`;
+    const np = $("#np2"); if (np) np.onclick = async () => { try { await Notification.requestPermission(); } catch(e){} pageMerchant(v); };
+    if (unread) API.readNotifs(s.id).then(() => setBadge(0)).catch(()=>{});
   }
   if (MT === "shop") {
     const d = { ...s, gallery:[...(s.gallery||[])] };
@@ -682,7 +865,10 @@ async function pageMerchant(v){
       <div class="r2"><label class="f"><span>WhatsApp</span><input class="in" name="whatsapp" value="${esc(s.whatsapp||"")}"></label><label class="f"><span>${L("Téléphone","Phone")}</span><input class="in" name="phone" value="${esc(s.phone||"")}"></label></div>
       <div class="r2"><label class="f"><span>${L("Site web (si vous en avez un)","Website (if you have one)")}</span><input class="in" name="website" value="${esc(s.website||"")}" placeholder="https://"></label><label class="f"><span>Email</span><input class="in" name="email" type="email" value="${esc(s.email||"")}"></label></div>
       <div class="r2"><label class="f"><span>Facebook</span><input class="in" name="facebook" value="${esc(s.facebook||"")}" placeholder="https://facebook.com/…"></label><label class="f"><span>Instagram</span><input class="in" name="instagram" value="${esc(s.instagram||"")}" placeholder="@…"></label></div>
-      <div class="r2"><label class="f"><span>${L("Horaires","Opening hours")}</span><input class="in" name="hours" value="${esc(s.hours||"")}" placeholder="${L("Lun–Sam 9h–19h","Mon–Sat 9am–7pm")}"></label><label class="f"><span>${L("Livraison","Delivery")}</span><select class="in" name="delivery"><option value="1" ${s.delivery?"selected":""}>${L("Oui","Yes")}</option><option value="0" ${!s.delivery?"selected":""}>${L("Non","No")}</option></select></label></div>
+      <div class="r2"><label class="f"><span>${L("Horaires","Opening hours")}</span><input class="in" name="hours" value="${esc(s.hours||"")}" placeholder="${L("Lun–Sam 9h–19h","Mon–Sat 9am–7pm")}"></label><label class="f"><span>${L("Livraison par votre livreur","Delivery by your courier")}</span><select class="in" name="delivery"><option value="1" ${s.delivery?"selected":""}>${L("Oui","Yes")}</option><option value="0" ${!s.delivery?"selected":""}>${L("Non","No")}</option></select></label></div>
+      <div class="r2"><label class="f"><span>${L("Retrait en boutique","Pickup at the shop")}</span><select class="in" name="pickup"><option value="1" ${s.pickup!==false?"selected":""}>${L("Oui","Yes")}</option><option value="0" ${s.pickup===false?"selected":""}>${L("Non","No")}</option></select></label>
+      <label class="f"><span>${L("Frais de livraison (affichés aux clients)","Delivery fees (shown to customers)")}</span><input class="in" name="delivery_note" maxlength="140" value="${esc(s.delivery_note||"")}" placeholder="${L("Cotonou 1 000 F · Calavi 1 500 F","Cotonou 1,000 F · Calavi 1,500 F")}"></label></div>
+      <p class="note" style="margin-top:-4px">${L("Les clients peuvent toujours envoyer leur propre livreur récupérer la commande.","Customers can always send their own courier to collect the order.")}</p>
       <div class="r2"><label class="f"><span>📣 ${L("Message promo (français)","Promo message (French)")} ${prem?"":"— Premium"}</span><input class="in" name="promo_fr" value="${esc(s.promo_fr||"")}" maxlength="120" ${prem?"":"disabled"}></label><label class="f"><span>📣 ${L("Message promo (anglais)","Promo message (English)")}</span><input class="in" name="promo_en" value="${esc(s.promo_en||"")}" maxlength="120" ${prem?"":"disabled"}></label></div>
       <div style="font-weight:700;font-size:12.5px;margin:4px 0 8px">${L("Galerie","Gallery")} (${d.gallery.length}/${maxG})</div><div class="imgs" id="gl"></div><input type="file" id="glF" accept="image/*" multiple hidden>
       <div style="margin-top:18px"><button class="btn pri" id="sfB">${L("Enregistrer","Save")}</button></div></form>`;
@@ -692,7 +878,7 @@ async function pageMerchant(v){
     $("#lgF").onchange = async e => { try { d.logo = await up(e.target.files[0], 500); $("#lgP").src = d.logo; } catch(err){ toast(err.message); } };
     $("#cvF").onchange = async e => { try { d.cover = await up(e.target.files[0], 1800); $("#cvP").src = d.cover; } catch(err){ toast(err.message); } };
     $("#glF").onchange = async e => { for (const f of [...e.target.files]) { if (d.gallery.length >= maxG) break; try { d.gallery.push(await up(f, 1400)); drawG(); } catch(err){ toast(err.message); } } e.target.value = ""; };
-    $("#sf").onsubmit = async e => { e.preventDefault(); const f = Object.fromEntries(new FormData(e.target)); f.delivery = f.delivery === "1"; if (!prem) { delete f.promo_fr; delete f.promo_en; }
+    $("#sf").onsubmit = async e => { e.preventDefault(); const f = Object.fromEntries(new FormData(e.target)); f.delivery = f.delivery === "1"; f.pickup = f.pickup === "1"; if (!prem) { delete f.promo_fr; delete f.promo_en; }
       try { await API.saveShop(s.id, { ...f, logo:d.logo||"", cover:d.cover||"", gallery:d.gallery }); await reloadData(); toast(L("Vitrine enregistrée ✓","Storefront saved ✓")); pageMerchant(v); } catch(err){ toast(err.message||"Erreur"); } };
   }
   if (MT === "products") {
@@ -829,12 +1015,13 @@ async function route(hh){
   await render(h);
 }
 async function render(h){
-  const v = $("#view"); closeModal(); v.onclick = null;
+  const v = $("#view"); closeModal(); v.onclick = null; if (h !== "merchant") stopWatch();
   chrome(h.startsWith("s-") ? "shops" : h); $("#nav").classList.remove("open"); window.scrollTo(0,0);
   if (h === "home") pageHome(v);
   else if (h === "shops") pageShops(v);
   else if (h === "favorites") pageShops(v, true);
   else if (h.startsWith("s-")) await pageShop(v, h.slice(2));
+  else if (h === "track" || h.startsWith("track-")) await pageTrack(v, h.startsWith("track-") ? h.slice(6) : "");
   else if (h === "join") pageJoin(v);
   else if (h === "signup") pageSignup(v);
   else if (h === "login") pageLogin(v);

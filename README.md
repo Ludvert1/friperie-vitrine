@@ -33,3 +33,8 @@ Shops are hidden automatically after the expiry date plus the grace days. The **
 - Product and photo limits are enforced on the server.
 - Leads, reviews and click tracking go through functions that only accept published shops.
 - Each merchant can only upload photos into their own storage folder.
+
+## Orders & shop notifications (Nov 2026)
+Run `supabase-orders.sql` once after `supabase-setup.sql` (already applied on the live project).
+Customers order without an account: pickup at the shop, their own courier, or the shop's courier.
+Shops get a notification feed (orders, requests, favorites, reviews, courier info, cancellations) with live alerts in the dashboard.
